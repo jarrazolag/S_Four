@@ -1,25 +1,22 @@
 package com.interview.sfour.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 
-import javax.persistence.CascadeType;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.JoinTable;
-import javax.persistence.ManyToMany;
+import javax.persistence.*;
 import java.util.Set;
 
 @Entity
+@Table(uniqueConstraints = {
+        @UniqueConstraint(columnNames = {"firstName", "lastName"})
+})
 public class Student {
 
-    private int id;
+    private Integer id;
     private String firstName;
     private String lastName;
 
-    private Set<Classroom> classes;
+    private Set<Course> courses;
 
 
     public Student() {
@@ -31,12 +28,12 @@ public class Student {
     }
 
     @Id
-    @GeneratedValue(strategy= GenerationType.AUTO)
-    public int getId() {
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    public Integer getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(Integer id) {
         this.id = id;
     }
 
@@ -57,14 +54,19 @@ public class Student {
     }
 
     @ManyToMany(cascade = CascadeType.MERGE)
-    @JoinTable(name = "student_class", joinColumns = { @JoinColumn(name = "id") }, inverseJoinColumns = { @JoinColumn(name = "code") })
+    @JoinTable(name = "student_course", joinColumns = {@JoinColumn(name = "id")}, inverseJoinColumns =
+            {@JoinColumn(name = "code")})
     @JsonManagedReference
-    public Set<Classroom> getClasses() {
-        return this.classes;
+    @JsonIgnore
+    public Set<Course> getCourses() {
+        return this.courses;
     }
 
-    public void setClasses(Set<Classroom> classes) {
-        this.classes = classes;
+    public void setCourses(Set<Course> courses) {
+        this.courses = courses;
     }
 
+    public void addCourse(Course course) {
+        this.courses.add(course);
+    }
 }

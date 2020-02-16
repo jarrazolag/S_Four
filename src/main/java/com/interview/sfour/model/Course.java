@@ -1,44 +1,44 @@
 package com.interview.sfour.model;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
-import javax.persistence.CascadeType;
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import java.util.Set;
 
 @Entity
-public class Classroom {
+public class Course {
 
-    private int code;
+    private Integer code;
     private String title;
     private String description;
 
     private Set<Student> students;
 
-    public Classroom() {
+    public Course() {
     }
 
-    public Classroom(String title, String description) {
+    public Course(String title, String description) {
         this.title = title;
         this.description = description;
     }
 
     @Id
-    @GeneratedValue(strategy= GenerationType.AUTO)
-    public int getCode() {
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    public Integer getCode() {
         return code;
     }
 
-    public void setCode(int code) {
+    public void setCode(Integer code) {
         this.code = code;
     }
 
+    @Column(unique = true)
     public String getTitle() {
         return title;
     }
@@ -55,8 +55,9 @@ public class Classroom {
         this.description = description;
     }
 
-    @ManyToMany(mappedBy = "classes")
+    @ManyToMany(mappedBy = "courses")
     @JsonBackReference
+    @JsonIgnore
     public Set<Student> getStudents() {
         return this.students;
     }
@@ -64,5 +65,4 @@ public class Classroom {
     public void setStudents(Set<Student> students) {
         this.students = students;
     }
-
 }
